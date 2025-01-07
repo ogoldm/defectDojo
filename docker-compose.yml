@@ -113,7 +113,7 @@ services:
     volumes:
       - defectdojo_postgres:/var/lib/postgresql/data
   redis:
-    image: redis:7.2.5-alpine@sha256:6aaf3f5e6bc8a592fbfe2cccf19eb36d27c39d12dab4f4b01556b7449e7b1f44
+    image: redis:7.4.2-alpine@sha256:86c23b252bbdaa1a867e0e360480de1aaea96e6ab3b1e69743c626c07a2a0c17
     volumes:
       - defectdojo_redis:/data
 volumes:
