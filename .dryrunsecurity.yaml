@@ -57,16 +57,6 @@ sensitiveCodepaths:
   - 'docker/wait-for-it.sh'
 allowedAuthors:
   usernames:
-    - mtesauro
-    - devGregA
-    - grendel513
-    - cneill
-    - Maffooch
-    - blakeaowens
-    - kiblik
-    - dsever
-    - dogboat
-    - hblankenship
+    - ogoldm
 notificationList:
-  - '@mtesauro'
-  - '@grendel513'
+  - '@ogoldm'
