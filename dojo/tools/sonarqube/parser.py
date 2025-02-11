@@ -8,6 +8,7 @@ from dojo.tools.sonarqube.sonarqube_restapi_json import SonarQubeRESTAPIJSON
 from dojo.tools.sonarqube.sonarqube_restapi_zip import SonarQubeRESTAPIZIP
 from dojo.tools.sonarqube.soprasteria_html import SonarQubeSoprasteriaHTML
 from dojo.tools.sonarqube.soprasteria_json import SonarQubeSoprasteriaJSON
+import lxml.etree
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ class SonarQubeParser:
             zipdata = {name: input_zip.read(name) for name in input_zip.namelist()}
             return SonarQubeRESTAPIZIP().get_items(zipdata, test, self.mode)
         parser = etree.HTMLParser()
-        tree = etree.parse(file, parser)
+        tree = etree.parse(file, parser, parser=lxml.etree.XMLParser(resolve_entities=False))
         if self.mode not in [None, "detailed"]:
             raise ValueError(
                 "Internal error: Invalid mode "
