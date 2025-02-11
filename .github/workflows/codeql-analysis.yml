@@ -1,0 +1,60 @@
+name: "CodeQL (Custom Report)"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      # 'security-events: write' is required to upload alerts to Code Scanning
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          # List your languages (e.g. 'javascript', 'python', 'go', 'java' etc.)
+          languages: javascript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      # This runs the standard CodeQL analysis but does NOT automatically upload results
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          upload: false
+
+      # Manually run the underlying 'codeql database analyze' to produce a local SARIF file
+      - name: Generate local SARIF
+        run: |
+          codeql database analyze \
+            --format=sarif-latest \
+            --output=codeql-results.sarif \
+            ${{ env.CODEQL_DATABASE_JAVASCRIPT }} \
+            /opt/codeql/javascript-queries
+          # ^ If you have multiple languages, you'd call "codeql database analyze" for each
+          #   or adapt your queries accordingly.
+
+      # Upload that SARIF file as an artifact you can download from the Actions tab
+      - name: Upload SARIF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeql-sarif
+          path: codeql-results.sarif
+
+      # Finally, upload the same SARIF file to GitHub Code Scanning
+      - name: Upload to GitHub code scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: codeql-results.sarif
