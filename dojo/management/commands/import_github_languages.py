@@ -1,11 +1,10 @@
 import json
 import logging
-
-import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from dojo.models import Language_Type
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 
         try:
             deserialized = json.loads(
-                requests.get(
+                safe_requests.get(
                     "https://raw.githubusercontent.com/ozh/github-colors/master/colors.json",
                     timeout=settings.REQUESTS_TIMEOUT,
                 ).text,
